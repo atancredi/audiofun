@@ -1,0 +1,8 @@
+__pycache__/
+.python-version
+dump/
+.DS_Store
+
+_augmentation_data/
+_test_data/
+_test_results/
