@@ -6,3 +6,6 @@ dump/
 _augmentation_data/
 _test_data/
 _test_results/
+
+*.png
+*.wav
