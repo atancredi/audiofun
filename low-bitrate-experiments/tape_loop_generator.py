@@ -1,4 +1,5 @@
-from fx import get_noise, get_impulse_response, apply_convolution, wow_flutter, bandpass_filter, save_audio
+from fx import get_noise, get_impulse_response, apply_convolution, wow_flutter, bandpass_filter, save_audio, normalize_to_peak_db
+import numpy as np
 
 if __name__ == "__main__":
     sample_rate = 44100
@@ -15,5 +16,10 @@ if __name__ == "__main__":
 
     audio = bandpass_filter(audio, sample_rate)
 
+    audio = normalize_to_peak_db(audio, -24)
+
+    # Clip , convert to int16, sve
+    audio = np.clip(audio, -1.0, 1.0)
+    audio = (audio * 32767).astype(np.int16)
     save_audio("tape_noise.wav", sample_rate, audio)
 

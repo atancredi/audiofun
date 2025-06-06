@@ -23,6 +23,40 @@ def save_audio(filename, rate, audio):
     wavfile.write(filename, rate, audio_final)
 
 
+def normalize_to_peak_db(audio, peak_db=-3.0):
+    """
+    Scales audio so that its peak reaches the target dB level.
+
+    Parameters:
+        audio (np.ndarray): Audio array (float32, values in [-1, 1]).
+        peak_db (float): Target peak in decibels (default: -3 dBFS).
+
+    Returns:
+        np.ndarray: Scaled audio.
+    """
+    current_peak = np.max(np.abs(audio))
+    if current_peak == 0:
+        return audio  # Avoid division by zero
+
+    target_peak_linear = 10 ** (peak_db / 20)
+    scale = target_peak_linear / current_peak
+    return audio * scale
+
+
+def apply_gain_db(audio, gain_db):
+    """
+    Applies gain to an audio signal in decibels.
+
+    Parameters:
+        audio (np.ndarray): Audio array (mono or stereo), assumed to be float in [-1, 1].
+        gain_db (float): Gain in decibels. Positive = boost, Negative = cut.
+
+    Returns:
+        np.ndarray: Audio with applied gain.
+    """
+    gain_factor = 10 ** (gain_db / 20)
+    return audio * gain_factor
+
 def get_noise(length_in_seconds, sample_rate=44100, amplitude=11):
     data = (
         stats.truncnorm(-1, 1, scale=min(2**16, 2**amplitude))
